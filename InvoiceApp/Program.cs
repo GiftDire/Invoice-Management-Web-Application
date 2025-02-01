@@ -1,5 +1,6 @@
 using InvoiceApp.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,11 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 //adding applicationdbcontext to the service container 
-builder.Services.AddDbContext<ApplicationDbContext>(Options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    Options.UseSqlServer(connectionString);
+    options.UseSqlServer(connectionString);
 });
+
 
 var app = builder.Build();
 
