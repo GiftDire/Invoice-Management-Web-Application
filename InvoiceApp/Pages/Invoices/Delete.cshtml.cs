@@ -21,7 +21,7 @@ namespace InvoiceApp.Pages.Invoices
                 context.SaveChanges();
             }
 
-            return RedirectToPage("/Invoice/Index");
+            return RedirectToPage("/Invoices/Index");
         }
     }
 }
