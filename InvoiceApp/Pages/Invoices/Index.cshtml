@@ -1,11 +1,25 @@
 ﻿@page
 @model InvoiceApp.Pages.Invoices.IndexModel
+@using System.Globalization
 @{
 }
 
 <h2 class="text-center mb-3">Invoices</h2>
 
-<a class="btn btn-primary mb-3" asp-page="/Invoices/Create">New Invoice</a>
+<div class="d-flex mb-3">
+    <a class="btn btn-primary me-2" asp-page="/Invoices/Create">New Invoice</a>
+
+    <!-- Inline GET-form for searching -->
+    <form method="get" class="d-flex">
+        <input asp-for="SearchTerm"
+               class="form-control me-2"
+               placeholder="Search by # or client…" />
+        <button type="submit" class="btn btn-outline-primary me-2">
+            Search
+        </button>
+        <a asp-page="/Invoices/Index" class="btn btn-link">Reset</a>
+    </form>
+</div>
 
 <table class="table">
     <thead>
@@ -21,19 +35,58 @@
         </tr>
     </thead>
     <tbody class="table-group-divider">
-        @foreach (var invoice in Model.invoicelist)
+        @foreach (var inv in Model.invoicelist)
         {
             <tr>
-                <td>@invoice.Id</td>
-                <td>@invoice.Number</td>
-                <td>@invoice.Status</td>
-                <td>@invoice.Clientname</td>
-                <td>@((invoice.Quantity * invoice.UnirPrice).ToString("C"))</td>
-                <td>@invoice.IssueDate</td>
-                <td>@invoice.Duedate.</td>
+                <td>@inv.Id</td>
+                <td>@inv.Number</td>
+                <td>
+                    @if (inv.Status == "Paid")
+                    {
+                        <span class="badge bg-success">Paid</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">@inv.Status</span>
+                    }
+                </td>
+                <td>@inv.Clientname</td>
+                <td>
+                    @(
+                       
+                        (inv.Quantity * inv.UnirPrice)
+                        .ToString(
+                        "C",
+                        CultureInfo.GetCultureInfo("en-ZA")//culture info allows us to make use of ZAR instead of the default us dollar//hope trump wont see this cos he wont be happy
+                        )
+                        )
+                </td>
+                <td>@inv.IssueDate</td>
+                <td>@inv.Duedate</td>
                 <td style="white-space:nowrap">
-                    <a class="btn btn-primary btn-sm" asp-page="/Invoices/Edit" asp-route-id="@invoice.Id">Edit</a>
-                    <a class="btn btn-danger btn-sm" asp-page="/Invoices/Delete" asp-route-id="@invoice.Id">Delete</a>
+                    <a class="btn btn-sm btn-primary"
+                       asp-page="/Invoices/Edit"
+                       asp-route-id="@inv.Id">
+                        Edit
+                    </a>
+                    <a class="btn btn-sm btn-danger"
+                       asp-page="/Invoices/Delete"
+                       asp-route-id="@inv.Id">
+                        Delete
+                    </a>
+
+                    @if (inv.Status != "Paid")
+                    {
+                        <form method="post"
+                              asp-page-handler="MarkPaid"
+                              asp-route-id="@inv.Id"
+                              style="display:inline">
+                            <button type="submit"
+                                    class="btn btn-sm btn-success ms-1">
+                                Mark Paid
+                            </button>
+                        </form>
+                    }
                 </td>
             </tr>
         }
