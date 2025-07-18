@@ -2,9 +2,86 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+
+
+    var hour = DateTime.Now.Hour;
+    var greeting = hour < 12
+        ? "Good morning"
+        : hour < 18
+            ? "Good afternoon"
+            : "Good evening";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<div class="p-5 mb-4 bg-primary text-white rounded-3 text-center">
+    <h1 class="display-5">@greeting, welcome to InvoiceApp!</h1>
+    <p class="lead">
+        Your hassle‑free way to create, track, and manage invoices.
+    </p>
+    <hr class="my-4 border-light" />
+ ->
+    <a asp-page="/Invoices/Create"
+       class="btn btn-danger btn-lg me-2">
+        🔖 New Invoice
+    </a>
+    <a asp-page="/Invoices/Index"
+       class="btn btn-success btn-lg">
+        📋 View Invoices
+    </a>
+</div>
+
+
+<div class="row text-center mb-5">
+    <div class="col">
+        <div class="card text-white bg-primary p-3 shadow-sm">
+            <h5>Total Invoices</h5>
+            <p class="h2">@Model.TotalInvoices</p>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-white bg-danger p-3 shadow-sm">
+            <h5>Pending</h5>
+            <p class="h2">@Model.PendingInvoices</p>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-white bg-success p-3 shadow-sm">
+            <h5>Paid</h5>
+            <p class="h2">@Model.PaidInvoices</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="row text-center">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 p-3 border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="text-primary">Create Invoice</h5>
+                <p class="text-muted">
+                    Quickly enter your items, quantities, and rates.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 p-3 border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="text-success">Send &amp; Share</h5>
+                <p class="text-muted">
+                    Email your invoice to clients in one click.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 p-3 border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="text-danger">Track Status</h5>
+                <p class="text-muted">
+                    Monitor paid vs pending in real time.
+                </p>
+            </div>
+        </div>
+    </div>
 </div>

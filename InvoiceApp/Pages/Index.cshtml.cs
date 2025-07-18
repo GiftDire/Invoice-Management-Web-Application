@@ -1,20 +1,28 @@
-using Microsoft.AspNetCore.Mvc;
+using InvoiceApp.Services;            // for ApplicationDbContext
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Linq;
 
 namespace InvoiceApp.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly ApplicationDbContext _ctx;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        // these match the @Model.TotalInvoices references in your view
+        public int TotalInvoices { get; set; }
+        public int PendingInvoices { get; set; }
+        public int PaidInvoices { get; set; }
+
+        public IndexModel(ApplicationDbContext ctx)
         {
-            _logger = logger;
+            _ctx = ctx;
         }
 
         public void OnGet()
         {
-
+            TotalInvoices = _ctx.Invoices.Count();
+            PendingInvoices = _ctx.Invoices.Count(i => i.Status == "Pending");
+            PaidInvoices = _ctx.Invoices.Count(i => i.Status == "Paid");
         }
     }
 }
